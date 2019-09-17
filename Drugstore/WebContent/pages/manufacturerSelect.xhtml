@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  template="/templates/modeloGeral.xhtml">
+	  
+<ui:define name="center">
+
+	<ui:define name="matadata">
+		<f:metadata>
+			<f:event listener="#{manufacturerBean.init}" type="preRenderView"/>
+		</f:metadata>
+	</ui:define>
+	<h:form>
+		<p:toolbar>
+			<f:facet name="left">
+				<h:outputText value="Description:"/>
+			</f:facet>
+		</p:toolbar>
+		
+		<p:separator />
+		
+		<p:dataTable value="#{manufacturerBean.list}" var="manu" filteredValue="#{manufacturerBean.listFiltered}" 
+					 paginator="true" rows="8" emptyMessage="No records found!">
+			
+			<p:column headerText="ID" style="width: 10%;">
+				<h:outputText value="#{manu.id}"/>
+			</p:column>
+			<p:column headerText="Description" sortBy="#{manu.descricao}" filterBy="#{manu.descricao}">
+				<h:outputText value="#{manu.descricao}"/>
+			</p:column>
+			<p:column headerText="Options" style="width: 12%;">
+				<p:button icon="ui-icon-pencil" outcome="manufacturerRegister.xhtml">
+					<f:param name="manuId" value="#{manu.id}"/>
+					<f:param name="acao" value="edit"/>
+				</p:button>
+				<p:button icon="ui-icon-trash" outcome="manufacturerRegister.xhtml">
+					<f:param name="manuId" value="#{manu.id}"/>
+					<f:param name="acao" value="delete"/>
+				</p:button>
+			</p:column>
+			
+			<f:facet name="footer">
+				<p:button icon="ui-icon-circle-plus" outcome="manufacturerRegister.xhtml">
+					<f:param name="acao" value="add"/>
+				</p:button>
+			</f:facet>
+		</p:dataTable>
+	</h:form>
+	
+	
+</ui:define>	  
+</ui:composition>

@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  template="/templates/modeloGeral.xhtml">
+	  
+<ui:define name="center">
+	
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:event listener="#{employeeBean.init}" type="preRenderView"/>
+		</f:metadata>
+	</ui:define>
+	
+	<h:form>
+		<p:toolbar>
+			<f:facet name="left">
+				<h:outputText value="Employees"/>
+			</f:facet>
+		</p:toolbar>
+	
+		<p:separator />
+	
+		<p:dataTable value="#{employeeBean.list}" var="emp" filteredValue="#{employeeBean.listFiltered}" paginator="true" rows="8" 
+					 emptyMessage="No records found!">
+			
+			<p:column headerText="ID" style="width: 5%;">
+				<h:outputText value="#{emp.id}"/>
+			</p:column>
+			<p:column headerText="Name" filterBy="#{emp.nome}" sortBy="#{emp.nome}">
+				<h:outputText value="#{emp.nome}"/>
+			</p:column>
+			<p:column headerText="CPF" filterBy="#{emp.cpf}" sortBy="#{emp.cpf}">
+				<h:outputText value="#{emp.cpf}"/>
+			</p:column>
+			<p:column headerText="Function" filterBy="#{emp.funcao}" sortBy="#{emp.funcao}">
+				<h:outputText value="#{emp.funcao}"/>
+			</p:column>
+			
+			<p:column headerText="Options" style="width: 10%;">
+				<p:button icon="ui-icon-pencil" outcome="employeeRegister.xhtml">
+					<f:param name="id" value="#{emp.id}"/>
+					<f:param name="acao" value="edit"/>
+				</p:button>
+				<p:button icon="ui-icon-trash" outcome="employeeRegister.xhtml">
+					<f:param name="id" value="#{emp.id}"/>
+					<f:param name="acao" value="delete"/>
+				</p:button>
+			</p:column>
+			
+			<f:facet name="footer">
+				<p:button icon="ui-icon-circle-plus" outcome="employeeRegister.xhtml">
+					<f:param name="acao" value="new"/>
+				</p:button>
+			</f:facet>
+		</p:dataTable>
+	</h:form>
+
+
+</ui:define>	  
+</ui:composition>

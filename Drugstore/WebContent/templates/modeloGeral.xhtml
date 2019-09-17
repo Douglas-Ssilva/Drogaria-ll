@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+	
+<ui:insert name="metadata"/>
+	  
+<h:head>
+	<title>Drugstore</title>
+	<h:outputStylesheet library="css" name="style.css"/>
+</h:head>
+
+<h:body>
+	<p:growl id="growl" life="3000"/>
+	<p:layout fullPage="true">
+		<p:layoutUnit position="north" header="Management System" size="100">
+			<ui:insert name="north"/>
+		</p:layoutUnit>
+		<p:layoutUnit position="south" header="Made by Douglas Silva" size="100">
+			<ui:insert name="south"/>
+		</p:layoutUnit>
+		<p:layoutUnit position="west" header="Menu main" size="250">
+		<!-- Definindo o menu já aqui -->
+			
+		<h:form id="formMenu">
+		<p:panelMenu id="panelMenu">
+				<p:submenu label="File">
+					<p:menuitem value="Authenticate" outcome="/pages/login.xhtml" rendered="#{loginBean.funcionario.funcao == null}"/>
+					<p:menuitem value="Main" outcome="/pages/main.xhtml" rendered="#{loginBean.funcionario.funcao != null}"/>
+					<p:menuitem value="Exit" action="#{loginBean.logout}" rendered="#{loginBean.funcionario.funcao != null}"/>
+				</p:submenu>
+				<p:submenu label="Registration" rendered="#{loginBean.funcionario.funcao != null}">
+					<p:menuitem value="Products" outcome="/pages/productSelect.xhtml"/>
+					<p:menuitem value="Manufactures" outcome="/pages/manufacturerSelect.xhtml"/>
+					<p:menuitem value="Employee" outcome="/pages/employeeSelect.xhtml" rendered="#{loginBean.funcionario.funcao != 'Employee'}"/>
+				</p:submenu>
+				<p:submenu label="Sales" rendered="#{loginBean.funcionario.funcao != null}">
+					<p:menuitem value="New" outcome="/pages/salesSelect.xhtml"/>
+					<p:menuitem value="Search" outcome="/pages/salesSearch.xhtml" rendered="#{loginBean.funcionario.funcao != null}"/>
+				</p:submenu>	
+		</p:panelMenu>
+		</h:form>	
+		</p:layoutUnit>
+		<p:layoutUnit position="center">
+			<ui:insert name="center"/>
+		</p:layoutUnit>
+	</p:layout>
+	
+</h:body>	  
+
+</html>

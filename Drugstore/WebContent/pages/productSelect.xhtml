@@ -1,0 +1,83 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  template="/templates/modeloGeral.xhtml">
+	  
+<ui:define name="center">
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:event listener="#{productBean.init}" type="preRenderView"/>
+		</f:metadata>
+	</ui:define>
+
+	<p:toolbar>
+		<f:facet name="left">
+			<h:outputText value="Products"/>
+		</f:facet>
+	</p:toolbar>
+	
+	<p:separator />
+	
+	<h:form id="form">
+		<p:dataTable id="tbl" value="#{productBean.list}" var="pro" filteredValue="#{productBean.listFiltered}" paginator="true" 
+					 rows="8" emptyMessage="No records found!">
+			
+			<!-- Falo que serão imagens externas --> <!-- UTF-8 não pega acentuação aqui -->
+			<f:facet name="header">
+            <div style="float:center;padding-top: 5px;">
+                <h:commandLink>
+                    <p:graphicImage library="img" name="excel.png" width="24"/>
+                    <p:dataExporter type="xls" target="tbl" fileName="products" /> 
+                    <!-- Tipo de exportação, target nome da table que tem que exportar, casa com id dataTable -->
+                </h:commandLink>
+ 
+                <h:commandLink>
+                    <p:graphicImage library="img" name="pdf.png" width="24"/>
+                    <p:dataExporter type="pdf" target="tbl" fileName="products" encoding="ISO-8859-1"/><!-- Pega acentuação -->
+                </h:commandLink>
+            </div>
+        	</f:facet>
+			
+			<p:column headerText="ID" style="width: 5%;">
+				<h:outputText value="#{pro.id}"/>
+			</p:column>
+			<p:column headerText="Description" filterBy="#{pro.descricao}" sortBy="#{pro.descricao}">
+				<h:outputText value="#{pro.descricao}"/>
+			</p:column>
+			<p:column headerText="Manufacturer" filterBy="#{pro.fabricante.descricao}" sortBy="#{pro.fabricante.descricao}">
+				<h:outputText value="#{pro.fabricante.descricao}"/>
+			</p:column>
+			<p:column headerText="Price" sortBy="#{pro.preco}" style="width: 10%;">
+				<h:outputText value="R$ "/>
+				<h:outputLabel value="#{pro.preco}">
+					<f:convertNumber pattern="0.00"/>
+				</h:outputLabel>
+			</p:column>
+			<p:column headerText="Amount" style="width: 8%;">
+				<h:outputText value="#{pro.quantidade}"/>
+			</p:column>
+			
+			<!-- Pra não ser exportado -->
+			<p:column headerText="Options" style="width: 8%;" exportable="false">	
+				<p:button icon="ui-icon-pencil" outcome="productRegister.xhtml">  
+					<f:param name="acao" value="edit"/>
+					<f:param name="id" value="#{pro.id}"/>
+				</p:button>
+				<p:button icon="ui-icon-trash" outcome="productRegister.xhtml">  
+					<f:param name="acao" value="delete"/>
+					<f:param name="id" value="#{pro.id}"/>
+				</p:button>
+			</p:column>
+			
+			<f:facet name="footer">
+				<p:button icon="ui-icon-circle-plus" outcome="productRegister.xhtml">  
+					<f:param name="acao" value="add"/>
+				</p:button>
+			</f:facet>
+		</p:dataTable>
+	</h:form>
+	
+</ui:define>	
+</ui:composition>

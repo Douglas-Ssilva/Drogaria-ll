@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+
+        <!-- Configuration connection -->
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/drugstore</property>
+        <property name="connection.username">root</property>
+        <property name="connection.password"></property>
+
+        <!-- Quantas conexões hibernate irá abrir -->
+        <property name="connection.pool_size">1</property>
+
+        <!-- SQL dialect, pois há comandos p diferentes bancos -->
+        <property name="dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+
+        <!-- Gerenciamento da sessão -->
+        <property name="current_session_context_class">thread</property>
+
+        <!-- Desabilita a cache  -->
+        <property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
+
+        <!-- Mostra no console os comandos HQL-->
+        <property name="show_sql">true</property>
+
+        <!-- Criação das tabelas, como update qualquer alteração no código Java, ele altera no banco -->
+        <property name="hbm2ddl.auto">validate</property>
+        
+        <mapping class="br.com.drugstore.model.Fabricante"/><!-- Mapeando a entidade -->
+        <mapping class="br.com.drugstore.model.Funcionario"/>
+        <mapping class="br.com.drugstore.model.Produto"/>
+        <mapping class="br.com.drugstore.model.Vendas"/>
+        <mapping class="br.com.drugstore.model.Itens"/>
+
+    </session-factory>
+</hibernate-configuration>

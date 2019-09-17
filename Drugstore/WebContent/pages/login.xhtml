@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  template="/templates/modeloGeral.xhtml">
+	  
+<ui:define name="center">
+	<p:toolbar>
+		<f:facet name="left">
+			<h:outputText value="Authenticate"/>
+		</f:facet>
+	</p:toolbar>
+	
+	<h:form>
+		<p:panelGrid columns="2">
+			<p:outputLabel value="CPF: "/>
+			<p:inputMask value="#{loginBean.funcionario.cpf}" mask="999.999.999-99">
+				<f:validateBean />			
+			</p:inputMask>
+			<p:outputLabel value="Password:: "/>
+			<p:password value="#{loginBean.funcionario.senha}" feedback="true" promptLabel="Please, enter with password!" weakLabel="Weak" 
+						goodLabel="Good" strongLabel=" VeryGood " placeholder="Enter with password!">
+				<f:validateBean />			
+			</p:password>
+		</p:panelGrid>
+		<p:panelGrid columns="1"> 
+			<p:commandButton value="Login" action="#{loginBean.logar}" update=":formMenu:panelMenu :growl"/>
+		</p:panelGrid>
+	</h:form>
+</ui:define>	 
+	  
+	  
+</ui:composition>	  
+	  

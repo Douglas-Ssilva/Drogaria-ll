@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  template="/templates/modeloGeral.xhtml">
+	  
+<ui:define name="center">
+	<h:form id="form">
+		<p:toolbar>
+			<f:facet name="left">
+				<h:outputText value="Search Dates"/>
+			</f:facet>
+		</p:toolbar>
+		
+		<p:panelGrid columns="5">
+			<h:outputLabel value="Initial date:"/>
+			<p:calendar value="#{salesBean.filter.dataInicial}"/>
+			<h:outputLabel value="Final date:"/>
+			<p:calendar value="#{salesBean.filter.dataFinal}"/>
+			<p:commandButton value="Search" actionListener="#{salesBean.loadDates}" update=":form:dataSearch"/>
+		</p:panelGrid>
+		
+		<p:separator/>
+		
+		<p:dataTable id="dataSearch" value="#{salesBean.listFilterData}" var="date" paginator="true" rows="10" 
+					emptyMessage="No records found!">
+					
+			<f:facet name="header">
+            <div style="float:center;padding-top: 5px;">
+                <h:commandLink>
+                    <p:graphicImage library="img" name="pdf.png" width="24"/>
+                    <p:dataExporter type="pdf" target="dataSearch" fileName="vendas" encoding="ISO-8859-1"/>
+                </h:commandLink>
+            </div>
+        	</f:facet>
+					
+			<p:column headerText="Employee">
+				<h:outputText value="#{date.funcionario.nome}"/>
+			</p:column>
+			<p:column headerText="Date">
+				<h:outputText value="#{date.horario}">
+					<f:convertDateTime pattern="dd/MM/yyyy"/>
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Amount">
+				<h:outputText value="R$ "/>
+				<h:outputText value="#{date.valorTotal}">
+					<f:convertNumber pattern="0.00"/>
+				</h:outputText>
+			</p:column>
+		
+		</p:dataTable>
+	</h:form>
+	<p:chart type="bar" model="#{salesBean.model}" style="heigth:300px;"/>
+</ui:define>	  
+	  
+</ui:composition>	  

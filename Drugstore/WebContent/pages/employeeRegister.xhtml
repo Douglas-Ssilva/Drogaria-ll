@@ -1,0 +1,70 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  template="/templates/modeloGeral.xhtml">
+	  
+<ui:define name="center">
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="acao" value="#{employeeBean.acao}"/> 
+			<f:viewParam name="id" value="#{employeeBean.id}"/>
+			<f:event listener="#{employeeBean.preparedActions}" type="preRenderView"/>
+		</f:metadata>
+	</ui:define>
+
+	<h:form id="form">
+		<p:toolbar>
+			<f:facet name="left">
+				<h:outputText value="Register employee"/>
+			</f:facet>
+		</p:toolbar>
+		
+		<p:separator />
+		
+		<p:panelGrid id="pnl" columns="2">
+			<p:outputLabel value="ID:"/>
+			<p:inputText value="#{employeeBean.funcionario.id}" size="10" readonly="true"/>
+			<p:outputLabel value="Name:"/>
+			<p:inputText value="#{employeeBean.funcionario.nome}" readonly="#{employeeBean.acao == 'delete'}" 
+						 maxlength="30" size="20">
+				<f:validateBean />			 
+			</p:inputText>
+			<p:outputLabel value="Password:"/>
+			<!-- Redisplay p senha digitada permanecer na tela em caso de não passar na validação -->
+			<p:password value="#{employeeBean.funcionario.senha}" feedback="true" promptLabel="Please, enter with password!" 
+						weakLabel="Weak" strongLabel="Very good!" goodLabel="Good" readonly="#{employeeBean.acao == 'delete'}" 
+						redisplay="true">
+				<f:validateBean />			 
+			</p:password>
+			<p:outputLabel value="CPF:"/>
+			<p:inputMask value="#{employeeBean.funcionario.cpf}" readonly="#{employeeBean.acao == 'delete'}" 
+						 size="15" mask="999.999.999-99">
+				<f:validateBean />			 
+			</p:inputMask>
+			<p:outputLabel value="Function:"/>
+			<p:selectOneMenu value="#{employeeBean.funcionario.funcao}" disabled="#{employeeBean.acao == 'delete'}">
+				<f:selectItem itemLabel="[Selecione]" itemValue=""/>
+				<f:selectItem itemLabel="Manager" itemValue="Manager"/>
+				<f:selectItem itemLabel="Employee" itemValue="Employee"/>
+				<f:selectItem itemLabel="Boss" itemValue="Boss"/>
+				<f:validateBean />			 
+			</p:selectOneMenu>
+		</p:panelGrid>
+		<p:panelGrid columns="5">
+			<p:commandButton icon="ui-icon-check" actionListener="#{employeeBean.save}" rendered="#{employeeBean.acao == 'new'}" 
+							  update=":form:pnl :growl"/>
+			<p:commandButton icon="ui-icon-arrowrefresh-1-s" update=":form:pnl" process="@this" 
+							 rendered="#{employeeBean.acao == 'new'}"/> <!-- Só com update ele limpa os campos -->
+			<p:commandButton icon="ui-icon-pencil" actionListener="#{employeeBean.edit}" update=":growl" 
+							 rendered="#{employeeBean.acao == 'edit'}"/>
+			<p:commandButton icon="ui-icon-trash" actionListener="#{employeeBean.delete}" update=":growl" 
+							 rendered="#{employeeBean.acao == 'delete'}"/>
+			<p:button icon="ui-icon-arrowreturnthick-1-w" outcome="employeeSelect.xhtml"/>
+		</p:panelGrid>
+	</h:form>
+
+</ui:define>	  
+</ui:composition>

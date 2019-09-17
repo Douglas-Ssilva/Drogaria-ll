@@ -1,0 +1,7 @@
+@charset "ISO-8859-1";
+
+
+/*CSS para resolver o tamanho das fontes, é bom deixarmos em % pois cada monitor possui sua resolução*/
+.ui-widget, .ui-widget .ui-widget {
+	font-size: 95%;
+}

@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  template="/templates/modeloGeral.xhtml">
+	  
+<ui:define name="center">
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="id" value="#{productBean.id}"/>
+			<f:viewParam name="acao" value="#{productBean.acao}"/>
+			<f:event listener="#{productBean.preparedActions}" type="preRenderView"/>
+		</f:metadata>
+	</ui:define>
+	
+	<p:toolbar>
+		<f:facet name="left">
+			<h:outputText value="New products"/>
+		</f:facet>
+	</p:toolbar>
+	
+	<p:separator />
+	
+	<h:form id="form">
+		<p:panelGrid id="pnl" columns="2">
+			<p:outputLabel value="ID:"/>
+			<p:inputText value="#{productBean.produto.id}" readonly="true"/>
+			<p:outputLabel value="Description:"/>
+			<p:inputText value="#{productBean.produto.descricao}" readonly="#{productBean.acao == 'delete'}">
+				<f:validateBean />
+			</p:inputText>
+			<p:outputLabel value="Price:"/>
+			<p:inputText value="#{productBean.produto.preco}" readonly="#{productBean.acao == 'delete'}" converterMessage="Skeap a value valid!">
+				<f:validateBean />
+				<f:convertNumber />
+			</p:inputText>
+			<p:outputLabel value="Amount:"/>
+			<p:inputText value="#{productBean.produto.quantidade}" readonly="#{productBean.acao == 'delete'}" >
+				<f:validateBean />
+			</p:inputText>
+			<p:outputLabel value="Manufacturer:"/>
+			<p:selectOneMenu value="#{productBean.produto.fabricante}" disabled="#{productBean.acao == 'delete'}" converter="manufacturerConverter">
+				<f:selectItem itemLabel="[Selecione]" itemValue=""/>
+				<f:selectItems value="#{productBean.listFabricantes}" var="fab" itemLabel="#{fab.descricao}" itemValue="#{fab}"/>
+				<f:validateBean />
+			</p:selectOneMenu> 
+		</p:panelGrid>
+		<p:panelGrid columns="5">
+			<p:commandButton icon="ui-icon-check" actionListener="#{productBean.save}" rendered="#{productBean.acao == 'add'}" 
+								update=":form:pnl :growl"/>
+			<p:commandButton icon="ui-icon-arrowrefresh-1-s" rendered="#{productBean.acao == 'add'}" 
+							update=":form:pnl" process="@this"/>
+			<p:commandButton icon="ui-icon-pencil" actionListener="#{productBean.edit}" update=":growl" 
+							 rendered="#{productBean.acao == 'edit'}"/>
+			<p:commandButton icon="ui-icon-trash" actionListener="#{productBean.delete}" update=":growl" 
+							 rendered="#{productBean.acao == 'delete'}"/>
+			<p:button icon="ui-icon-arrowreturnthick-1-w" outcome="productSelect.xhtml"/>
+		</p:panelGrid>
+		
+	</h:form>
+	
+	
+	
+</ui:define>	
+</ui:composition>

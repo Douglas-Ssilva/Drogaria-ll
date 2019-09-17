@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  template="/templates/modeloGeral.xhtml">
+	  
+
+<ui:define name="metadata">
+	<f:metadata>
+		<f:event listener="#{salesBean.loadProducts}" type="preRenderView"/>
+	</f:metadata>
+</ui:define>
+
+<ui:define name="center">
+	<h:form id="form">
+		<p:toolbar>
+			<f:facet name="left">
+				<h:outputText value="Products"/>
+			</f:facet>
+		</p:toolbar>
+		
+		<p:separator />
+
+			<p:dataTable value="#{salesBean.list}" var="pro" filteredValue="#{salesBean.listFiltered}" paginator="true" rows="5"
+						 emptyMessage="No record found">
+
+				<p:column headerText="ID" style="width: 5%;">
+					<h:outputText value="#{pro.id}"/>
+				</p:column>
+				<p:column headerText="Description" filterBy="#{pro.descricao}" sortBy="#{pro.descricao}">
+					<h:outputText value="#{pro.descricao}"/>
+				</p:column>
+				<p:column headerText="Manufacturer" filterBy="#{pro.fabricante}" sortBy="#{pro.fabricante}">
+					<h:outputText value="#{pro.fabricante.descricao}"/>
+				</p:column>
+				<p:column headerText="Price" sortBy="#{pro.preco}" style="width: 12%;">
+					<h:outputText value="R$ "/>
+					<h:outputText value="#{pro.preco}">
+							<f:convertNumber />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Options" style="width: 8%;">
+					<p:commandButton icon="ui-icon-circle-plus" actionListener="#{salesBean.addProduct(pro)}" 
+									 update=":form:dataItens "/>
+				</p:column>
+				
+			</p:dataTable>
+			
+			<p:separator />
+
+			<p:toolbar>
+				<f:facet name="left">
+					<h:outputText value="Shopping Cart"/>
+				</f:facet>
+			</p:toolbar>
+			
+			<p:separator />
+			
+			<p:dataTable id="dataItens" value="#{salesBean.itens}" var="item" paginator="true" rows="5" emptyMessage="No records found!">
+					
+				<p:column headerText="Product" sortBy="#{item.produto.descricao}" filterBy="#{item.produto.descricao}">
+					<h:outputText value="#{item.produto.descricao}"/>
+				</p:column>
+				<p:column headerText="Manufacturer" sortBy="#{item.produto.fabricante.descricao}" filterBy="#{item.produto.fabricante.descricao}">
+					<h:outputText value="#{item.produto.fabricante.descricao}"/>
+				</p:column>
+				<p:column headerText="Amount Partial" footerText="Total itens: #{salesBean.vendas.quantidadeTotal}">
+					<h:outputText value="#{item.quantidade}"/>
+				</p:column>
+				<p:column headerText="Partial value">
+					<f:facet name="footer">
+						<h:outputText value="Total R$: "/>
+						<h:outputText value="#{salesBean.vendas.valorTotal}">
+							<f:convertNumber pattern="0.00"/>
+						</h:outputText>
+					</f:facet>
+						<h:outputText value="R$ "/>
+					<h:outputText value="#{item.valorParcial}">
+							<f:convertNumber pattern="0.00"/>
+					</h:outputText>
+				</p:column>
+				
+				<p:column headerText="Options" style="width: 8%;"> 
+					<p:commandButton icon="ui-icon-trash" actionListener="#{salesBean.delete(item)}" 
+									 update=":form:dataItens "/>
+					<f:facet name="footer">
+				<p:commandButton style="color: #00FF7F;" value="Finalize" actionListener="#{salesBean.salesData}" oncomplete="PF('dlgFinalize').show();" 
+								  update=":formDlg:pnlDlg"/>			
+					</f:facet>
+				</p:column>
+				
+			</p:dataTable>
+			
+			<p:separator />
+			
+		</h:form>
+		
+		<p:dialog widgetVar="dlgFinalize" draggable="false" resizable="false" closable="true" modal="true" appendTo="@(body)" header="Sale data" 
+				  showEffect="explode" position="top">
+			<h:form id="formDlg">
+				<h:panelGrid id="pnlDlg" columns="2">
+					<h:outputText value="Time: "/>
+					<h:outputText value="#{salesBean.vendas.horario}">
+						<!--Não impacta nada no banco, só visual , HH hora formato 24:00, timezone p pegar horário correto daqui -->
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo"/>
+					</h:outputText>
+					<h:outputText value="Employee: "/>
+					<h:outputText value="#{salesBean.vendas.funcionario.nome}"/>
+					<h:outputText value="Amount: "/>
+					<h:outputText value="R$ #{salesBean.vendas.valorTotal}"/>
+				</h:panelGrid>
+				<h:panelGrid>
+					<p:commandButton value="Save" actionListener="#{salesBean.saveSalesBanco}" 
+									 oncomplete="PF('dlgFinalize').hide();" update=":form:dataItens :growl"/>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	
+</ui:define>	  
+</ui:composition>	  

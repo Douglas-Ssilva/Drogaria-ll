@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  template="/templates/modeloGeral.xhtml">
+	  
+<ui:define name="center">
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="manuId" value="#{manufacturerBean.id}"/>
+			<f:viewParam name="acao" value="#{manufacturerBean.acao}"/>
+			<f:event listener="#{manufacturerBean.loadRegister}" type="preRenderView"/>
+		</f:metadata>
+	</ui:define>
+	
+	<h:form id="form">
+		<p:toolbar> 
+			<f:facet name="left">
+				<h:outputText value="New manufacturer"/>
+			</f:facet>
+		</p:toolbar>
+		
+		<p:separator />
+			
+		<p:panelGrid columns="2" id="pnl">
+			<p:outputLabel value="ID:"/>
+			<p:inputText value="#{manufacturerBean.fabricante.id}" size="10" readonly="true"/>
+			<p:outputLabel value="Description:"/>
+			<p:inputText value="#{manufacturerBean.fabricante.descricao}" size="20" maxlength="30" 
+						 readonly="#{manufacturerBean.acao == 'delete'}">
+				<f:validateBean />
+			</p:inputText>
+		</p:panelGrid>
+		<p:panelGrid columns="5">
+			<p:commandButton icon="ui-icon-check" actionListener="#{manufacturerBean.save}" update=":form:pnl :growl" 
+							 rendered="#{manufacturerBean.acao == 'add'}"/>
+			<p:commandButton icon="ui-icon-arrowrefresh-1-s" update=":form:pnl"
+							  rendered="#{manufacturerBean.acao == 'add'}" process="@this"/><!-- Process p pular a etapa de validação -->
+			<p:commandButton icon="ui-icon-pencil" actionListener="#{manufacturerBean.update}" update=":growl"
+							  rendered="#{manufacturerBean.acao == 'edit'}"/>
+			<p:commandButton icon="ui-icon-trash" actionListener="#{manufacturerBean.delete}" update=":growl"
+							  rendered="#{manufacturerBean.acao == 'delete'}"/>
+			<p:commandButton icon="ui-icon-arrowreturnthick-1-w" action="manufacturerSelect.xhtml?faces-redirect=true" 
+							 process="@this"/><!-- Process pois não estava retornando depois que implementei a validation -->
+		</p:panelGrid>
+		
+	</h:form>
+</ui:define>	  
+	  
+
+</ui:composition>
